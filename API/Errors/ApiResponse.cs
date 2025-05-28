@@ -12,6 +12,7 @@
             Message = message ?? GetDefaultMessageForStatusCode(statusCode);
         }
         public int StatusCode { get; set; }
+
         public string Message { get; set; }
         private string GetDefaultMessageForStatusCode(int statusCode)
         {

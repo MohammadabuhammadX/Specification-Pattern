@@ -17,6 +17,19 @@ namespace Infrastructure.Data
         {
             _context = context;
         }
+
+        public async Task<T> AddAsync(T entity)
+        {
+            if(entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
+            }
+            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity;
+
+        }
+
         public async Task DeleteAsync(int id)
         {
             var entity = await _context.Set<T>().FindAsync(id);
@@ -49,6 +62,17 @@ namespace Infrastructure.Data
         public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec)
         {
             return await ApplySpecification(spec).ToListAsync();
+        }
+
+        public async Task<T> UpdateAsync(T entity)
+        {
+            if(entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
+            }
+            _context.Set<T>().Update(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
         private IQueryable<T> ApplySpecification(ISpecification<T> spec)

@@ -11,6 +11,10 @@ namespace API.Helpers
             CreateMap<Employee, EmployeeToReturnDto>()
                 .ForMember(d => d.DepartmentName, o => o.MapFrom(s => s.Department.Name))
                 .ForMember(d => d.RoleName, o => o.MapFrom(s => s.Role.Name));
+            CreateMap<CreateEmployeeDto, Employee>();
+
+            CreateMap<UpdateEmployeeDto, Employee>();
+
         }
     }
 }
