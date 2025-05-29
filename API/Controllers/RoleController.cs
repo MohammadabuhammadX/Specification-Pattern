@@ -83,5 +83,19 @@ namespace API.Controllers
             await _roleService.DeleteRoleAsync(id);
             return NoContent();
         }
+
+        [HttpPost("{roleId}/permissions")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Role>> AddPermission(int roleId, [FromBody] string permission)
+        {
+            if (string.IsNullOrWhiteSpace(permission))
+            {
+                return BadRequest(new ApiResponse(400, "Permission cannot be null or empty."));
+            }
+            var updatedRole = await _roleService.AddPermissionAsync(roleId, permission);
+            return Ok(updatedRole);
+        }
     }
 }

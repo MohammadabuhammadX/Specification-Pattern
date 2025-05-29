@@ -17,7 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
-
+builder.Services.AddScoped<IDepartmentService, DepartmentRepository>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 
 builder.Services.AddEndpointsApiExplorer();

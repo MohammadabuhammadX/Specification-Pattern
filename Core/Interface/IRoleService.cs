@@ -16,5 +16,6 @@ namespace Core.Interface
         Task<Role> UpdateRoleAsync(Role role);
         Task DeleteRoleAsync(int id);
         Task<bool> RoleExistsAsync(int id);
+        Task<Role> AddPermissionAsync(int roleId, string permission);
     }
 }

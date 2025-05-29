@@ -15,6 +15,11 @@ namespace API.Helpers
 
             CreateMap<UpdateEmployeeDto, Employee>();
 
+            CreateMap<Department, DepartmentDto>();
+
+            CreateMap<CreateDepartmentDto, Department>();
+            CreateMap<UpdateDepartmentDto, Department>();
+
         }
     }
 }
