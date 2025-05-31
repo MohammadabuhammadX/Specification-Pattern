@@ -1,12 +1,7 @@
-﻿using Core.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Core.Entities;
+﻿using Core.Entities;
+using Core.Interface;
 using Core.Specifications;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
@@ -20,10 +15,14 @@ namespace Infrastructure.Data
 
         public async Task<T> AddAsync(T entity)
         {
-            if(entity == null)
+            if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
             }
+
+            entity.CreatedAt = DateTime.UtcNow;
+            entity.UpdatedAt = DateTime.UtcNow;
+
             await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity;
@@ -33,9 +32,11 @@ namespace Infrastructure.Data
         public async Task DeleteAsync(int id)
         {
             var entity = await _context.Set<T>().FindAsync(id);
-            if(entity != null)
+            if (entity != null)
             {
-                _context.Set<T>().Remove(entity);
+
+                entity.MarkAsDeleted();
+                _context.Entry(entity).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
         }
@@ -46,12 +47,19 @@ namespace Infrastructure.Data
 
         public async Task<IReadOnlyList<T>> GetAllAsync()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _context.Set<T>()
+                .Where(e => !e.IsDeleted)
+                .ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(int id)
         {
-            return await _context.Set<T>().FindAsync(id);
+            var entity = await _context.Set<T>().FindAsync(id);
+            if (entity == null || entity.IsDeleted)
+            {
+                return null;
+            }
+            return entity;
         }
 
         public async Task<T> GetEntityWithSpec(ISpecification<T> spec)
@@ -64,12 +72,35 @@ namespace Infrastructure.Data
             return await ApplySpecification(spec).ToListAsync();
         }
 
+        public async Task RestoreAsync(int id)
+        {
+            var entity = await _context.Set<T>()
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (entity != null && entity.IsDeleted)
+            {
+                entity.IsDeleted = false;
+                entity.UpdatedAt = DateTime.UtcNow;
+                _context.Entry(entity).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task<T> GetByIdIncludingDeletedAsync(int id)
+        {
+            return await _context.Set<T>()
+                .IgnoreQueryFilters()                           
+                .FirstOrDefaultAsync(e => e.Id == id);
+        }
         public async Task<T> UpdateAsync(T entity)
         {
-            if(entity == null)
+            if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
             }
+
+            entity.UpdatedAt = DateTime.UtcNow;
+
             _context.Set<T>().Update(entity);
             await _context.SaveChangesAsync();
             return entity;

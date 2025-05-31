@@ -18,5 +18,8 @@ namespace Core.Interface
         Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec);
         Task DeleteAsync(int id);
         Task<bool> ExistsAsync(int id);
+        Task RestoreAsync(int id);
+        Task<T> GetByIdIncludingDeletedAsync(int id);
+
     }
 }

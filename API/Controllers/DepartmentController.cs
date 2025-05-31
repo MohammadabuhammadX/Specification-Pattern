@@ -106,6 +106,23 @@ namespace API.Controllers
             var departmentDtos = _mapper.Map<IReadOnlyList<DepartmentDto>>(departments);
             return Ok(departmentDtos);
         }
+        
+        [HttpGet("including-deleted/{id}")]
+        public async Task<Department>GetDepartmentByIdIncludingDeletedAsync(int id)
+        {
+           return await _departmentRepository.GetByIdIncludingDeletedAsync(id);
+        }
+        [HttpPost("restore/{id}")]
+        public async Task<IActionResult> RestoreDepartment(int id)
+        {
+            var department = await _departmentService.GetDepartmentByIdIncludingDeletedAsync(id);
 
+            if (department == null)
+                return NotFound(new ApiResponse(404));
+
+            await _departmentService.RestoreDepartmentAsync(id);
+
+            return Ok(new ApiResponse(200));
+        }
     }
 }

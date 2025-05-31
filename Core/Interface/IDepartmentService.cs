@@ -14,6 +14,8 @@ namespace Core.Interface
         Task<Department> CreateDepartmentAsync(Department department);
         Task<Department> UpdateDepartmentAsync(Department department);
         Task DeleteDepartmentAsync(int id);
+        Task RestoreDepartmentAsync(int id);
+        Task<Department> GetDepartmentByIdIncludingDeletedAsync(int id);
 
     }
 }

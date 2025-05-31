@@ -30,6 +30,16 @@ namespace Infrastructure.Services
             return await _departmentRepository.GetByIdAsync(id);
         }
 
+        public async Task<Department> GetDepartmentByIdIncludingDeletedAsync(int id)
+        {
+           return await _departmentRepository.GetByIdIncludingDeletedAsync(id);
+        }
+
+        public async Task RestoreDepartmentAsync(int id)
+        {
+            await _departmentRepository.RestoreAsync(id);
+        }
+
         public async Task<Department> UpdateDepartmentAsync(Department department)
         {
             return await _departmentRepository.UpdateAsync(department);
