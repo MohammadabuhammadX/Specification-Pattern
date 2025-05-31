@@ -20,6 +20,14 @@ namespace API.Helpers
             CreateMap<CreateDepartmentDto, Department>();
             CreateMap<UpdateDepartmentDto, Department>();
 
+            CreateMap<Attendance, AttendanceDto>()
+                .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src =>
+                    src.Employee != null ? $"{src.Employee.FirstName} {src.Employee.LastName}" : null));
+
+            CreateMap<CreateAttendanceDto, Attendance>();
+            CreateMap<UpdateAttendanceDto, Attendance>();
+
+
         }
     }
 }

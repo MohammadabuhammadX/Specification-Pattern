@@ -20,8 +20,8 @@ namespace Infrastructure.Data
                 throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
             }
 
-            entity.CreatedAt = DateTime.UtcNow;
-            entity.UpdatedAt = DateTime.UtcNow;
+            entity.CreatedAt = DateTime.Now;
+            entity.UpdatedAt = DateTime.Now;
 
             await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
@@ -81,7 +81,7 @@ namespace Infrastructure.Data
             if (entity != null && entity.IsDeleted)
             {
                 entity.IsDeleted = false;
-                entity.UpdatedAt = DateTime.UtcNow;
+                entity.UpdatedAt = DateTime.Now;
                 _context.Entry(entity).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
@@ -99,7 +99,7 @@ namespace Infrastructure.Data
                 throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
             }
 
-            entity.UpdatedAt = DateTime.UtcNow;
+            entity.UpdatedAt = DateTime.Now;
 
             _context.Set<T>().Update(entity);
             await _context.SaveChangesAsync();

@@ -11,7 +11,7 @@ namespace Core.Entities
         public virtual BaseEntity MarkAsDeleted(bool isDeleted = true)
         {
             IsDeleted = isDeleted;
-            UpdatedAt = DateTime.UtcNow;
+            UpdatedAt = DateTime.Now;
             return this;
         }
     }

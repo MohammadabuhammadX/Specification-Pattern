@@ -20,6 +20,5 @@ namespace Core.Interface
         Task<bool> ExistsAsync(int id);
         Task RestoreAsync(int id);
         Task<T> GetByIdIncludingDeletedAsync(int id);
-
     }
 }
